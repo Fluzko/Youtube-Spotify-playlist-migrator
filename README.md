@@ -11,15 +11,16 @@ pip3 install -r requirements.txt
 
 ## Setup
 The script connects to the Youtube V3 API and to the Spotify one, so corresponding credentials are required.  
-Insert those keys at the config.py file like this:
+Insert those keys at the config.py file like this:  
+
 ![config-template](imgs/config.py.png)
 
 Also the Youtube  playlists that you want to migrate and the matched Spotify playlist name is required, you can specify this at the config.py file too.  
 pd: the playlist cant be "private"  
 
-![config-template](imgs/youtube_playlist_url.png)  
+![youtube_playlist_url](imgs/youtube_playlist_url.png)  
 
-![config-template](imgs/playlists_config.png)
+![config_playlist_to_migrate](imgs/playlists_config.png)
 
 See that the script can migrate multiple playlists at once, or join them in the same Spotify playlist.
 
