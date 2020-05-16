@@ -10,7 +10,7 @@ pip3 install -r requirements.txt
 ```
 
 ## Setup
-The script connects to the Youtube V3 API and to the Spotify one, so corresponding credentials are required.  
+The script connects to the [Youtube V3 API](https://developers.google.com/youtube/v3) and to the [Spotify](https://developer.spotify.com/) one, so corresponding credentials are required.  
 Insert those keys at the config.py file like this:  
 
 ![config-template](imgs/config.py.png)
