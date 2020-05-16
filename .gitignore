@@ -1,3 +1,4 @@
+config.py
 client_secret.json
 secrets.py
 # Created by https://www.gitignore.io/api/venv,python,pycharm,jetbrains,virtualenv,pycharm+iml,pycharm+all,jetbrains+all
