@@ -1,9 +1,11 @@
-import google_auth_oauthlib.flow
-import google_auth_oauthlib.flow
-import googleapiclient.discovery
-import googleapiclient.errors
+# import google_auth_oauthlib.flow
+# import google_auth_oauthlib.flow
+# import googleapiclient.discovery
+# import googleapiclient.errors
+import sys
 import os
 import requests
+
 
 
 class Youtube:
@@ -34,24 +36,31 @@ class Youtube:
         #
         # return youtube_client
 
-    def get_videos_from_playlist(self, auth,playlist):
+    def get_videos_from_playlist(self, playlist):
         # r = self.client.playlistItems().list(
         #     playlistId=playlist,
         #     part="snippet,contentDetails,statistics",
         #     maxResults=50,
         # ).execute()
 
-        r = requests.get("https://www.googleapis.com/youtube/v3/playlistItems?"
-                         "playlistId={}&"
-                         "part=snippet&"
-                         "maxResults=50&"
-                         "alt=json&"
-                         "key={}".format(playlist, self.api_key)).json()
+        params = {
+            "playlistId": playlist,
+            "part": "snippet",
+            "maxResults": 50,
+            "alt": "json",
+            "key": self.api_key
+        }
+        r = requests.get("https://www.googleapis.com/youtube/v3/playlistItems", params=params).json()
 
         if r.get("error"):
             print(r["error"])
+            sys.exit()
             # r["error"]["code"]
             # r["error"]["message"]
+
+        if r.get("totalResults") == 0:
+            print("La playlist esta vacia")
+            sys.exit()
 
         videos = []
         for item in r["items"]:

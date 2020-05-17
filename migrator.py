@@ -44,14 +44,11 @@ class Migrator:
             )
             print("La playlist no existe, creando una nueva...")
 
-        print(playlist_id)
         return playlist_id
 
 
 # TODO
-#  readme
 #  mejorar responsabilidades
-#  apis singleton
 #  handle de exceptions,
 #  handle yt playlist viene vacia
 #  handle temas repetidos en playlist ya creada
