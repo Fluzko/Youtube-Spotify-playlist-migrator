@@ -1,4 +1,5 @@
 from apis.youtube import Youtube
+from exceptions import youtube_exceptions
 
 
 class YoutubeAdapter:
@@ -9,4 +10,9 @@ class YoutubeAdapter:
         self.api = Youtube(auth)
 
     def get_videos_from_playlist(self, playlist):
-        return self.api.get_videos_from_playlist(playlist)
+        try:
+            return self.api.get_videos_from_playlist(playlist)
+        except youtube_exceptions.EmptyPlaylist:
+            raise
+        except youtube_exceptions.YoutubeError:
+            raise

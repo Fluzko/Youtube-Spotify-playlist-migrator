@@ -1,6 +1,8 @@
 import requests
 import json
 import sys
+from exceptions import spotify_exceptions
+
 
 class Spotify:
     def __init__(self, auth):
@@ -33,6 +35,7 @@ class Spotify:
             return playlists_dict
 
         except requests.exceptions.HTTPError:
+            raise spotify_exceptions.SearchPlaylistsError
             print("\nError buscando playlists")
             sys.exit()
             # TODO raise?
@@ -49,16 +52,10 @@ class Spotify:
         endpoint = self.__endpoint__("/users/{}/playlists".format(self.user_id))
         try:
             r = requests.post(endpoint, headers=self.headers, data=json.dumps(body))
-
             r.raise_for_status()
-
-            r_json = r.json()
-            return r_json["id"]
-
+            return r.json()["id"]
         except requests.exceptions.HTTPError:
-            print("\nno se pudo crear la playlist")
-            sys.exit()
-#           TODO raise?
+            raise spotify_exceptions.CreatePlaylistError
 
     # given a dictionary {song:"", artist:""} & Spotify playlist ID, adds the songs to the palylist.
     def add_songs_to_playlist(self, songs, playlist_id):
@@ -77,8 +74,7 @@ class Spotify:
             return r.json()
 
         except requests.exceptions.HTTPError:
-            print("\nNo se pudo agregar las canciones a la playlist")
-            sys.exit()
+            raise spotify_exceptions.AddSongsToPlaylistError
 
     # given author & song name, returns back the spotify internal URI for that song.
     def __get_song_uri__(self, artist, song_name):
@@ -103,11 +99,9 @@ class Spotify:
 
         except requests.exceptions.HTTPError:
             print("no se encontro la uri de {}".format(song_name))
-            sys.exit()
-#           TODO raise? o mejor return None y print consola. linea 37
+
         except IndexError:
             print("no se encontro la uri de {}".format(song_name))
-            sys.exit()
 
     # builds the final endpoint
     def __endpoint__(self, url):

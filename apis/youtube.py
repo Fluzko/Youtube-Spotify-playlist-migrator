@@ -5,7 +5,7 @@
 import sys
 import os
 import requests
-
+from exceptions import youtube_exceptions
 
 
 class Youtube:
@@ -53,14 +53,14 @@ class Youtube:
         r = requests.get("https://www.googleapis.com/youtube/v3/playlistItems", params=params).json()
 
         if r.get("error"):
-            print(r["error"])
+            raise youtube_exceptions.YoutubeError
+            # print(r["error"])
             sys.exit()
             # r["error"]["code"]
             # r["error"]["message"]
 
         if r.get("totalResults") == 0:
-            print("La playlist esta vacia")
-            sys.exit()
+            raise youtube_exceptions.EmptyPlaylist
 
         videos = []
         for item in r["items"]:
@@ -70,6 +70,6 @@ class Youtube:
 
         return videos
 
+    # TODO
     def get_playlist_name(self, playlist):
-        # r = self.client()
         pass
