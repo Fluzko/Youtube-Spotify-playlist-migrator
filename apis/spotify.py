@@ -56,7 +56,7 @@ class Spotify:
 
     # given a dictionary {song:"", artist:""} & Spotify playlist ID, adds the songs to the palylist.
     def add_songs_to_playlist(self, songs, playlist_id):
-        uris = [self.__get_song_uri__(song["artist"], song["song_name"]) for song in songs]
+        uris = self.get_songs_uri(songs)
         query_uris = ",".join(filter(None, uris))
 
         params = {
@@ -72,6 +72,14 @@ class Spotify:
 
         except requests.exceptions.HTTPError:
             raise spotify_exceptions.AddSongsToPlaylistError
+
+    def get_songs_uri(self, songs):
+        try:
+            return [self.__get_song_uri__(song["artist"], song["song_name"]) for song in songs]
+        except requests.exceptions.HTTPError:
+            raise
+        except IndexError:
+            raise
 
     # given author & song name, returns back the spotify internal URI for that song.
     def __get_song_uri__(self, artist, song_name):
@@ -93,18 +101,16 @@ class Spotify:
 
         except requests.exceptions.HTTPError as e:
             print("no se encontro la uri de {}".format(song_name))
-            print(e)
 
         except IndexError as e:
             print("no se encontro la uri de {}".format(song_name))
-            print(e)
 
     # Given a palylist, resturns a list of all the uris of its songs, if no song, empty list is returned
     def playlist_songs_uri(self, playlist):
         endpoint = self.__endpoint__('/playlists/{}/tracks'.format(playlist))
         params = {
             "market": "AR",
-            "fields": "items(traks(uri))",
+            "fields": "items(track(uri))",
         }
         try:
             r = requests.get(endpoint, headers=self.headers, params=params)

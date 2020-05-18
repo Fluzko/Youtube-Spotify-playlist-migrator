@@ -41,4 +41,6 @@ Please make sure to update tests as appropriate.
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Changelog
- - Improved exceptions handling 
+ - adds no more songs that have been already added
+ - Improved exceptions handling
+  

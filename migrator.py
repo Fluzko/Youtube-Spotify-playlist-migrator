@@ -4,6 +4,7 @@ from services.videoInfoExtractor import VideoInfoExtractor
 from exceptions import youtube_exceptions, spotify_exceptions
 import config
 import sys
+import requests.exceptions as exceptions
 
 
 class Migrator:
@@ -63,17 +64,20 @@ class Migrator:
     def add_songs_to_playlist(self, songs, playlist_id):
         try:
             print("Agregando canciones a la playlist...")
-            # TODO
-            # songs_uris = get_songs_uris(songs)
-            try:
-                songs_uris = self.spt.playlist_songs_uri(playlist_id)
-            except spotify_exceptions.RetrieveSongsFromPlaylist:
-                print("Spotify error, aborting...")
-                sys.exit()
-
-            # playlist_songs_uris = playlists_actual_uris(playlist_id)
-            # uris_to_add = [uri for uri in songs_uris if uri not in playlist_songs_uris]
-            self.spt.add_songs_to_playlist(songs, playlist_id)
+            playlist_songs_uris = self.spt.playlist_songs_uri(playlist_id)
+            songs_uris = self.spt.get_songs_uris(songs)
+            uris_to_add = [uri for uri in songs_uris if uri not in playlist_songs_uris]
+            if len(uris_to_add) and uris_to_add != [None]:
+                self.spt.add_songs_to_playlist(uris_to_add, playlist_id)
+        except spotify_exceptions.RetrieveSongsFromPlaylist:
+            print("Spotify error, aborting...")
+            sys.exit()
+        except exceptions.HTTPError:
+            print("Spotify error, aborting...")
+            sys.exit()
+        except IndexError:
+            print("Spotify error, aborting...")
+            sys.exit()
         except spotify_exceptions.AddSongsToPlaylistError:
             raise
 

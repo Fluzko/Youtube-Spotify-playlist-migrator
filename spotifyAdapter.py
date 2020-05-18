@@ -1,6 +1,6 @@
 from apis.spotify import Spotify
 from exceptions import spotify_exceptions
-
+import requests
 
 class SpotifyAdapter:
     def __init__(self, client_id, api_token):
@@ -34,4 +34,12 @@ class SpotifyAdapter:
         try:
             return self.api.playlist_songs_uri(playlist)
         except spotify_exceptions.RetrieveSongsFromPlaylist:
+            raise
+
+    def get_songs_uris(self, songs):
+        try:
+            return self.api.get_songs_uri(songs)
+        except requests.exceptions.HTTPError:
+            raise
+        except IndexError:
             raise
