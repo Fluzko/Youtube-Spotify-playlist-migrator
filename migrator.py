@@ -26,6 +26,7 @@ class Migrator:
                 songs = self.extract_song_and_author(videos)
                 playlist_id = self.create_spotify_playlist(playlist)
                 self.add_songs_to_playlist(songs, playlist_id)
+
             except youtube_exceptions.EmptyPlaylist:
                 print("La playlist esta vacia")
             except spotify_exceptions.CreatePlaylistError:
@@ -62,6 +63,16 @@ class Migrator:
     def add_songs_to_playlist(self, songs, playlist_id):
         try:
             print("Agregando canciones a la playlist...")
+            # TODO
+            # songs_uris = get_songs_uris(songs)
+            try:
+                songs_uris = self.spt.playlist_songs_uri(playlist_id)
+            except spotify_exceptions.RetrieveSongsFromPlaylist:
+                print("Spotify error, aborting...")
+                sys.exit()
+
+            # playlist_songs_uris = playlists_actual_uris(playlist_id)
+            # uris_to_add = [uri for uri in songs_uris if uri not in playlist_songs_uris]
             self.spt.add_songs_to_playlist(songs, playlist_id)
         except spotify_exceptions.AddSongsToPlaylistError:
             raise
@@ -94,4 +105,4 @@ class Migrator:
 #  handle temas repetidos en playlist ya creada
 #  handle temas repetidos en yt
 #  inyeccion de dependencias migrator
-# inyeccion de dependencias, patron adapter,propagar exceptions, exceptions custom
+# Pythonic list comprhension, inyeccion de dependencias, patron adapter,propagar exceptions, exceptions custom

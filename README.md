@@ -41,6 +41,4 @@ Please make sure to update tests as appropriate.
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Changelog
- none
-## Fixings
-none
+ - Improved exceptions handling 

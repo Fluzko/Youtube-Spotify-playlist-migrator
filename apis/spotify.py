@@ -29,16 +29,13 @@ class Spotify:
                 playlist_info = {
                     "name": playlist.get("name"),
                     "id": playlist.get("id")
-                 }
+                }
                 playlists_dict.append(playlist_info)
 
             return playlists_dict
 
         except requests.exceptions.HTTPError:
             raise spotify_exceptions.SearchPlaylistsError
-            print("\nError buscando playlists")
-            sys.exit()
-            # TODO raise?
 
     # Given a name and a description, creates a Spotify playlist and returns its ID
     def create_playlist(self, playlist_name, playlist_description):
@@ -78,16 +75,13 @@ class Spotify:
 
     # given author & song name, returns back the spotify internal URI for that song.
     def __get_song_uri__(self, artist, song_name):
-        params = {
-            "query": "track%3A{}+artist%3A{}".format(song_name, artist).replace(" ", "%20"),
-            "type": "track",
-            "offset": 0,
-            "limit": 1
-        }
-        endpoint = self.__endpoint__("/search")
-
+        endpoint = self.__endpoint__("/search?"
+                                     "query=track%3A{}+artist%3A{}&"
+                                     "type=track&"
+                                     "offset=0&"
+                                     "limit=1".format(song_name, artist).replace(" ", "%20"))
         try:
-            r = requests.get(endpoint, headers=self.headers, params=params)
+            r = requests.get(endpoint, headers=self.headers)
             r.raise_for_status()
 
             r_json = r.json()
@@ -97,11 +91,33 @@ class Spotify:
 
             return uri
 
-        except requests.exceptions.HTTPError:
+        except requests.exceptions.HTTPError as e:
             print("no se encontro la uri de {}".format(song_name))
+            print(e)
 
-        except IndexError:
+        except IndexError as e:
             print("no se encontro la uri de {}".format(song_name))
+            print(e)
+
+    # Given a palylist, resturns a list of all the uris of its songs, if no song, empty list is returned
+    def playlist_songs_uri(self, playlist):
+        endpoint = self.__endpoint__('/playlists/{}/tracks'.format(playlist))
+        params = {
+            "market": "AR",
+            "fields": "items(traks(uri))",
+        }
+        try:
+            r = requests.get(endpoint, headers=self.headers, params=params)
+            r.raise_for_status()
+
+            # No songs at the playlist
+            if not len(r.json().get("items")):
+                return []
+
+            return [song["track"]["uri"] for song in r.json()["items"]]
+
+        except requests.exceptions.HTTPError:
+            raise spotify_exceptions.RetrieveSongsFromPlaylist
 
     # builds the final endpoint
     def __endpoint__(self, url):

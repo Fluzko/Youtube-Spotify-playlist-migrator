@@ -29,3 +29,9 @@ class SpotifyAdapter:
             return self.api.playlists()
         except spotify_exceptions.SearchPlaylistsError:
             raise
+
+    def playlist_songs_uri(self, playlist):
+        try:
+            return self.api.playlist_songs_uri(playlist)
+        except spotify_exceptions.RetrieveSongsFromPlaylist:
+            raise

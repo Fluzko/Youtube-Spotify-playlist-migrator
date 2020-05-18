@@ -13,3 +13,5 @@ class AddSongsToPlaylistError(Exception):
 # class UnknownSongURI(Exception):
 #     pass
 
+class RetrieveSongsFromPlaylist(Exception):
+    pass
