@@ -2,6 +2,7 @@ from apis.spotify import Spotify
 from exceptions import spotify_exceptions
 import requests
 
+
 class SpotifyAdapter:
     def __init__(self, client_id, api_token):
         self.auth = {
@@ -22,6 +23,12 @@ class SpotifyAdapter:
         try:
             return self.api.add_songs_to_playlist(songs, playlist_id)
         except spotify_exceptions.AddSongsToPlaylistError:
+            raise
+
+    def add_uris_to_playlist(self, uris, playlist_id):
+        try:
+            self.api.add_uris_to_playlist(uris, playlist_id)
+        except requests.exceptions.HTTPError:
             raise
 
     def playlists(self):

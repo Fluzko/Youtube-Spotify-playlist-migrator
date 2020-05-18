@@ -54,9 +54,7 @@ class Spotify:
         except requests.exceptions.HTTPError:
             raise spotify_exceptions.CreatePlaylistError
 
-    # given a dictionary {song:"", artist:""} & Spotify playlist ID, adds the songs to the palylist.
-    def add_songs_to_playlist(self, songs, playlist_id):
-        uris = self.get_songs_uri(songs)
+    def add_uris_to_playlist(self, uris, playlist_id):
         query_uris = ",".join(filter(None, uris))
 
         params = {
@@ -72,6 +70,16 @@ class Spotify:
 
         except requests.exceptions.HTTPError:
             raise spotify_exceptions.AddSongsToPlaylistError
+
+    # given a dictionary {song:"", artist:""} & Spotify playlist ID, adds the songs to the palylist.
+    def add_songs_to_playlist(self, songs, playlist_id):
+        try:
+            uris = self.get_songs_uri(songs)
+            self.add_uris_to_playlist(uris, playlist_id)
+        except requests.exceptions.HTTPError:
+            raise
+        except IndexError:
+            raise
 
     def get_songs_uri(self, songs):
         try:

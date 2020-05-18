@@ -67,8 +67,8 @@ class Migrator:
             playlist_songs_uris = self.spt.playlist_songs_uri(playlist_id)
             songs_uris = self.spt.get_songs_uris(songs)
             uris_to_add = [uri for uri in songs_uris if uri not in playlist_songs_uris]
-            if len(uris_to_add) and uris_to_add != [None]:
-                self.spt.add_songs_to_playlist(uris_to_add, playlist_id)
+            if len(uris_to_add) and uris_to_add is not [None]:
+                self.spt.add_uris_to_playlist(uris_to_add, playlist_id)
         except spotify_exceptions.RetrieveSongsFromPlaylist:
             print("Spotify error, aborting...")
             sys.exit()
