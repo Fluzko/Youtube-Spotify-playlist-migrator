@@ -83,14 +83,14 @@ class Spotify:
 
     def get_songs_uri(self, songs):
         try:
-            return [self.__get_song_uri__(song["artist"], song["song_name"]) for song in songs]
+            return [self.get_song_uri(song["artist"], song["song_name"]) for song in songs]
         except requests.exceptions.HTTPError:
             raise
         except IndexError:
             raise
 
     # given author & song name, returns back the spotify internal URI for that song.
-    def __get_song_uri__(self, artist, song_name):
+    def get_song_uri(self, artist, song_name):
         endpoint = self.__endpoint__("/search?"
                                      "query=track%3A{}+artist%3A{}&"
                                      "type=track&"
