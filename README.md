@@ -41,6 +41,7 @@ Please make sure to update tests as appropriate.
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Changelog
+ - Now if YoutubeDL fails at video|artist extraction, the script tries by itself to extract it with a custom algorithm.
  - adds no more songs that have been already added
  - Improved exceptions handling
   
